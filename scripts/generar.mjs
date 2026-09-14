@@ -136,66 +136,57 @@ const anim = (nombre, dur, retraso, extra = "") =>
 
 /* ============================================================
    ENCABEZADO
-   Nombre a todo el ancho, en dos líneas de cartel. Cada letra entra
-   girando sobre su canto inferior, como en el hero del sitio. SVG no
-   tiene perspectiva real, pero un giro en X sin perspectiva es
-   exactamente un scaleY(cos θ): se ve igual.
+   Nombre y apellido en una sola línea de cartel, a todo el ancho, con
+   el lema debajo. Iba en dos líneas, pero en escritorio el nombre llenaba
+   la pantalla entera antes de que asomara el primer párrafo.
+
+   Cada letra entra girando sobre su canto inferior, como en el hero del
+   sitio. SVG no tiene perspectiva real, pero un giro en X sin perspectiva
+   es exactamente un scaleY(cos θ): se ve igual.
    ============================================================ */
 
 function encabezado(tema, idioma) {
   const c = TEMAS[tema];
-  const linea1 = perfil.nombre.toUpperCase();
-  const linea2 = perfil.apellido.toUpperCase();
+  const nombre = perfil.nombre.toUpperCase();
+  const completo = `${nombre} ${perfil.apellido.toUpperCase()}`;
 
-  // Tamaño tal que la primera línea ocupe el ancho completo.
-  const ref = caja(bebas, linea1, 100);
-  const tam = Math.floor((100 * ANCHO) / (ref.x2 - ref.x1));
-  const c1 = caja(bebas, linea1, tam);
-  const c2 = caja(bebas, linea2, tam);
+  // Tamaño tal que el nombre completo ocupe el ancho.
+  const ref = caja(bebas, completo, 100);
+  const tam = (100 * ANCHO) / (ref.x2 - ref.x1);
+  const cj = caja(bebas, completo, tam);
+  // -y1 es lo que sube la tilde de la Í sobre la línea base.
+  const base = -cj.y1 + 2;
 
-  const base1 = -c1.y1 + 4;
-  // La tilde de la Ñ sube sobre la altura de mayúsculas: la segunda línea
-  // se separa lo justo para que no toque la primera.
-  const base2 = base1 + Math.max(tam * 0.86, -c2.y1 + tam * 0.07);
-
-  const n1 = glifos(bebas, linea1, -c1.x1, base1, tam);
-  const n2 = glifos(bebas, linea2, -c2.x1, base2, tam);
-
+  // El espacio no tiene trazado: los primeros glifos son el nombre y el
+  // resto, el apellido, que va en el color de acento.
   let i = 0;
-  const letra = (d, color) =>
-    `<path class="a caja letra" fill="${color}" style="${anim("voltear", 1.2, 0.15 + i++ * 0.045)}" d="${d}"/>`;
-  const nombre = [
-    ...n1.trazados.map((d) => letra(d, c.texto)),
-    ...n2.trazados.map((d) => letra(d, c.acento)),
-  ].join("\n");
-
-  // Lema: a la derecha del apellido, con la última línea sobre su base.
-  const inicioLema = c2.x2 - c2.x1 + tam * 0.09;
-  const lineas = perfil.lema[idioma];
-  let tamLema = 31;
-  const anchoMax = () => Math.max(...lineas.map((l) => caja(interLigera, l, tamLema).x2));
-  while (inicioLema + anchoMax() > ANCHO - 2) tamLema -= 0.5;
-  const interlineado = tamLema * 1.3;
-
-  let palabra = 0;
-  const lema = lineas
-    .map((texto, n) => {
-      const base = base2 - (lineas.length - 1 - n) * interlineado;
-      const arriba = base - tamLema;
-      // Cada línea recorta a sus palabras: suben desde debajo de la línea.
-      const recorte = `<clipPath id="l${n}"><rect x="${r2(inicioLema - 4)}" y="${r2(arriba - 4)}" width="${r2(ANCHO)}" height="${r2(tamLema * 1.45)}"/></clipPath>`;
-      let x = inicioLema;
-      const palabras = texto.split(" ").map((p) => {
-        const d = trazado(interLigera, p, x, base, tamLema);
-        x += interLigera.getAdvanceWidth(p + " ", tamLema);
-        return `<path class="a caja" fill="${c.atenuado}" style="${anim("subir", 1, 0.75 + palabra++ * 0.05)}" d="${d}"/>`;
-      });
-      return `${recorte}<g clip-path="url(#l${n})">${palabras.join("")}</g>`;
+  const letras = glifos(bebas, completo, -cj.x1, base, tam)
+    .trazados.map((d, n) => {
+      const color = n < [...nombre].length ? c.texto : c.acento;
+      return `<path class="a caja letra" fill="${color}" style="${anim("voltear", 1.2, 0.15 + i++ * 0.04)}" d="${d}"/>`;
     })
     .join("\n");
 
-  const yRegla = base2 + 30;
-  const regla = `<rect class="a caja" x="0" y="${r2(yRegla)}" width="${ANCHO}" height="1" fill="${c.bordeFuerte}" style="${anim("crecer-x", 1.6, 1.05, "transform-origin:0 0;")}"/>`;
+  // Lema: una línea bajo el nombre. Sus palabras suben desde debajo de
+  // un recorte, como si salieran de detrás de la línea.
+  const texto = perfil.lema[idioma].join(" ");
+  let tamLema = 27;
+  while (caja(interLigera, texto, tamLema).x2 > ANCHO - 2) tamLema -= 0.5;
+  const baseLema = base + tam * 0.14 + tamLema;
+  const recorte = `<clipPath id="lema"><rect x="-4" y="${r2(baseLema - tamLema - 4)}" width="${ANCHO + 8}" height="${r2(tamLema * 1.45)}"/></clipPath>`;
+  let x = 0;
+  const palabras = texto
+    .split(" ")
+    .map((p, n) => {
+      const d = trazado(interLigera, p, x, baseLema, tamLema);
+      x += interLigera.getAdvanceWidth(p + " ", tamLema);
+      return `<path class="a caja" fill="${c.atenuado}" style="${anim("subir", 1, 0.7 + n * 0.05)}" d="${d}"/>`;
+    })
+    .join("");
+  const lema = `${recorte}<g clip-path="url(#lema)">${palabras}</g>`;
+
+  const yRegla = baseLema + 24;
+  const regla = `<rect class="a caja" x="0" y="${r2(yRegla)}" width="${ANCHO}" height="1" fill="${c.bordeFuerte}" style="${anim("crecer-x", 1.6, 1, "transform-origin:0 0;")}"/>`;
 
   const css = `
 .letra { transform-origin: 50% 100%; }
@@ -204,9 +195,9 @@ function encabezado(tema, idioma) {
 
   return svg({
     alto: yRegla + 2,
-    titulo: `${perfil.nombre} ${perfil.apellido}. ${lineas.join(" ")}`,
+    titulo: `${perfil.nombre} ${perfil.apellido}. ${texto}`,
     css,
-    cuerpo: `${nombre}\n${lema}\n${regla}`,
+    cuerpo: `${letras}\n${lema}\n${regla}`,
   });
 }
 

@@ -18,7 +18,7 @@ export const perfil = {
   linkedin: "https://www.linkedin.com/in/benjam%C3%ADn-pe%C3%B1a",
   cv: "https://benjamin-pena.vercel.app/CV-Benjamin-Pena.pdf",
   email: "benja.diaz.2911@gmail.com",
-  // Dos líneas: van a la derecha de "PEÑA", apoyadas en su línea base.
+  // Va en una línea bajo el nombre; se guarda partido por si vuelve a ir en dos.
   lema: {
     en: ["Frontend developer and", "data analyst in Santiago, Chile."],
     es: ["Desarrollador frontend y", "analista de datos en Santiago, Chile."],
