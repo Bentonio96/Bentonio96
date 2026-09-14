@@ -39,9 +39,27 @@ export const perfil = {
 
 /**
  * `motivo` elige el dibujo animado de la franja (ver MOTIVOS en generar.mjs).
- * El orden de este arreglo es el orden en el perfil.
+ * El orden de este arreglo es el orden en el perfil: el portafolio va primero.
+ * `captura` es opcional; sin ella, capturar.mjs usa `demo`.
  */
 export const proyectos = [
+  {
+    slug: "portafolio",
+    nombre: { en: "Portfolio", es: "Portafolio" },
+    motivo: "lighthouse",
+    descripcion: {
+      en: "My personal site, in Spanish and English, with light and dark themes. Zero axe-core violations and Lighthouse 100 on desktop.",
+      es: "Mi sitio personal, en español e inglés, con tema claro y oscuro. Cero violaciones de axe-core y Lighthouse 100 en escritorio.",
+    },
+    tecnologias: ["Next.js 15", "TypeScript", "GSAP", "Lenis", "Tailwind CSS"],
+    demo: "https://benjamin-pena.vercel.app",
+    // Se captura en cada idioma para que la ventana coincida con el README.
+    captura: {
+      en: "https://benjamin-pena.vercel.app/en",
+      es: "https://benjamin-pena.vercel.app/es",
+    },
+    repo: "Landing-Page",
+  },
   {
     slug: "atacama",
     nombre: { en: "Atacama", es: "Atacama" },
@@ -101,18 +119,6 @@ export const proyectos = [
     tecnologias: ["React 19", "TypeScript", "Framer Motion", "Vite", "Tailwind CSS"],
     demo: "https://turnera-iota.vercel.app",
     repo: "Turnera",
-  },
-  {
-    slug: "portafolio",
-    nombre: { en: "Portfolio", es: "Portafolio" },
-    motivo: "lighthouse",
-    descripcion: {
-      en: "My personal site, in Spanish and English, with light and dark themes. Zero axe-core violations and Lighthouse 100 on desktop.",
-      es: "Mi sitio personal, en español e inglés, con tema claro y oscuro. Cero violaciones de axe-core y Lighthouse 100 en escritorio.",
-    },
-    tecnologias: ["Next.js 15", "TypeScript", "GSAP", "Lenis", "Tailwind CSS"],
-    demo: "https://benjamin-pena.vercel.app",
-    repo: "Landing-Page",
   },
 ];
 

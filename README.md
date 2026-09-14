@@ -17,12 +17,28 @@ I'm open to full-time and freelance roles.
 
 ## Projects
 
+<a href="https://benjamin-pena.vercel.app/en">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-portafolio-en-dark.svg">
+  <img alt="Portfolio" src="assets/proyecto-portafolio-en-light.svg" width="100%">
+</picture>
+</a>
+
+<a href="https://benjamin-pena.vercel.app/en"><img alt="Screenshot of Portfolio, scrolling through the live site" src="assets/ventana-portafolio-en.svg" width="100%"></a>
+
+My personal site, in Spanish and English, with light and dark themes. Zero axe-core violations and Lighthouse 100 on desktop.
+
+`Next.js 15` `TypeScript` `GSAP` `Lenis` `Tailwind CSS`<br>
+[Live site](https://benjamin-pena.vercel.app/en) &nbsp;&nbsp; [Source code](https://github.com/Bentonio96/Landing-Page)
+
 <a href="https://atacama-puce.vercel.app">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-atacama-dark.svg">
   <img alt="Atacama" src="assets/proyecto-atacama-light.svg" width="100%">
 </picture>
 </a>
+
+<a href="https://atacama-puce.vercel.app"><img alt="Screenshot of Atacama, scrolling through the live site" src="assets/ventana-atacama.svg" width="100%"></a>
 
 A scroll-driven visual essay about the Atacama sky and astronomy in Chile, in seven chapters and two languages. Accessible end to end, with a real reduced-motion version instead of animations simply switched off.
 
@@ -36,6 +52,8 @@ A scroll-driven visual essay about the Atacama sky and astronomy in Chile, in se
 </picture>
 </a>
 
+<a href="https://epicentro-sigma.vercel.app"><img alt="Screenshot of Epicentro, scrolling through the live site" src="assets/ventana-epicentro.svg" width="100%"></a>
+
 Real-time earthquake tracker for Chile using USGS data. A live map synced with a listing that works end to end with a keyboard and a screen reader.
 
 `Next.js 15` `TypeScript` `MapLibre` `Recharts` `Tailwind CSS`<br>
@@ -47,6 +65,8 @@ Real-time earthquake tracker for Chile using USGS data. A live map synced with a
   <img alt="Barómetro" src="assets/proyecto-barometro-light.svg" width="100%">
 </picture>
 </a>
+
+<a href="https://barometro-hazel.vercel.app"><img alt="Screenshot of Barómetro, scrolling through the live site" src="assets/ventana-barometro.svg" width="100%"></a>
 
 Chilean economic indicators, built around what most dashboards get wrong: series published at different frequencies. Daily values, history, base-100 comparison and a CLP/UF/UTM/USD/EUR converter, from mindicador.cl.
 
@@ -60,6 +80,8 @@ Chilean economic indicators, built around what most dashboards get wrong: series
 </picture>
 </a>
 
+<a href="https://centinela-rho.vercel.app"><img alt="Screenshot of Centinela, scrolling through the live site" src="assets/ventana-centinela.svg" width="100%"></a>
+
 Security incident monitoring dashboard. A single screen where an analyst sees what's open, what's critical and what to look at next.
 
 `React 19` `TypeScript` `Recharts` `Vite` `Tailwind CSS`<br>
@@ -72,22 +94,12 @@ Security incident monitoring dashboard. A single screen where an analyst sees wh
 </picture>
 </a>
 
+<a href="https://turnera-iota.vercel.app"><img alt="Screenshot of Turnera, scrolling through the live site" src="assets/ventana-turnera.svg" width="100%"></a>
+
 Product site for a fictional appointment-scheduling app for small clinics. The product isn't real; the visual craft and the performance budget are (Lighthouse 99/100/100/100).
 
 `React 19` `TypeScript` `Framer Motion` `Vite` `Tailwind CSS`<br>
 [Live site](https://turnera-iota.vercel.app) &nbsp;&nbsp; [Source code](https://github.com/Bentonio96/Turnera)
-
-<a href="https://benjamin-pena.vercel.app/en">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-portafolio-en-dark.svg">
-  <img alt="Portfolio" src="assets/proyecto-portafolio-en-light.svg" width="100%">
-</picture>
-</a>
-
-My personal site, in Spanish and English, with light and dark themes. Zero axe-core violations and Lighthouse 100 on desktop.
-
-`Next.js 15` `TypeScript` `GSAP` `Lenis` `Tailwind CSS`<br>
-[Live site](https://benjamin-pena.vercel.app/en) &nbsp;&nbsp; [Source code](https://github.com/Bentonio96/Landing-Page)
 
 ## Stack
 

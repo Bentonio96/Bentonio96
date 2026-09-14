@@ -25,10 +25,11 @@
  *     completa y quieta.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import opentype from "opentype.js";
+import sharp from "sharp";
 import { perfil, proyectos, stack } from "./datos.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -377,6 +378,79 @@ function franja(p, indice, tema, idioma) {
 }
 
 /* ============================================================
+   VENTANA DE PROYECTO
+   Una ventana de navegador con la captura real del sitio (hecha por
+   capturar.mjs). Primero corre la barra de carga violeta bajo la barra
+   de direcciones; después la página baja sola, se detiene y vuelve,
+   en un ciclo lento que sigue ahí cuando alguien llega con el scroll.
+
+   Un SVG cargado como <img> no puede pedir archivos, así que la captura
+   va incrustada en base64. Es un solo archivo para los dos temas de
+   GitHub: la ventana es oscura, como casi todos los proyectos.
+   ============================================================ */
+
+const VENTANA = {
+  barra: 34,
+  vista: 440,
+  marco: "#0E1117",
+  barraFondo: "#141922",
+  borde: "#232A36",
+  bordeFuerte: "#3A4353",
+  tenue: "#8B94A3",
+  vivo: "#6C5CFF",
+};
+
+/** Archivo de captura: el portafolio tiene una por idioma. */
+const nombreCaptura = (p, idioma) => (p.captura ? `${p.slug}-${idioma}` : p.slug);
+
+async function ventana(p, indice, idioma) {
+  const ruta = join(RAIZ, "capturas", `${nombreCaptura(p, idioma)}.jpg`);
+  if (!existsSync(ruta)) return null;
+
+  const v = VENTANA;
+  const { width, height } = await sharp(ruta).metadata();
+  const anchoVista = ANCHO - 2;
+  const altoImagen = (height * anchoVista) / width;
+  const recorrido = Math.max(0, altoImagen - v.vista);
+  const alto = v.barra + v.vista + 1;
+  const t0 = 1.6 + indice * 0.2;
+  const host = new URL(p.captura?.[idioma] ?? p.demo).host;
+
+  const cajaHost = caja(interNormal, host, 12);
+  const xHost = ANCHO / 2 - (cajaHost.x2 - cajaHost.x1) / 2 - cajaHost.x1;
+  const datos = readFileSync(ruta).toString("base64");
+
+  // Esquinas inferiores redondeadas; arriba la tapa la barra.
+  const r = 6;
+  const recorte = `M1 ${v.barra}H${ANCHO - 1}V${alto - r}Q${ANCHO - 1} ${alto - 1} ${ANCHO - 1 - r} ${alto - 1}H${1 + r}Q1 ${alto - 1} 1 ${alto - r}Z`;
+
+  const css = `
+.carga { transform-box: fill-box; transform-origin: 0 0; opacity: 0; animation: cargar 1.4s ${SALIDA} ${r2(t0)}s both; }
+.pagina { animation: recorrer 22s ease-in-out ${r2(t0 + 1.4)}s infinite; }
+@keyframes cargar { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
+@keyframes recorrer {
+  0%, 12% { transform: translateY(0); }
+  46%, 58% { transform: translateY(-${r2(recorrido)}px); }
+  92%, 100% { transform: translateY(0); }
+}`;
+
+  return svg({
+    alto,
+    titulo: idioma === "es" ? `Captura de ${p.nombre.es}` : `Screenshot of ${p.nombre.en}`,
+    css,
+    cuerpo: `<rect x="0.5" y="0.5" width="${ANCHO - 1}" height="${alto - 1}" rx="${r}" fill="${v.marco}" stroke="${v.bordeFuerte}"/>
+<clipPath id="vista"><path d="${recorte}"/></clipPath>
+<g clip-path="url(#vista)"><image class="pagina" x="1" y="${v.barra}" width="${anchoVista}" height="${r2(altoImagen)}" preserveAspectRatio="none" href="data:image/jpeg;base64,${datos}"/></g>
+<path d="M${1 + r} 1H${ANCHO - 1 - r}Q${ANCHO - 1} 1 ${ANCHO - 1} ${1 + r}V${v.barra}H1V${1 + r}Q1 1 ${1 + r} 1Z" fill="${v.barraFondo}"/>
+<rect x="1" y="${v.barra - 1}" width="${ANCHO - 2}" height="1" fill="${v.borde}"/>
+${[20, 36, 52].map((cx) => `<circle cx="${cx}" cy="${v.barra / 2}" r="4.5" fill="${v.bordeFuerte}"/>`).join("")}
+<rect x="${ANCHO / 2 - 180}" y="6" width="360" height="22" rx="4" fill="${v.marco}" stroke="${v.borde}"/>
+<path fill="${v.tenue}" d="${trazado(interNormal, host, xHost, 21.5, 12)}"/>
+<rect class="carga" x="1" y="${v.barra - 1}" width="${ANCHO - 2}" height="2" fill="${v.vivo}"/>`,
+  });
+}
+
+/* ============================================================
    README
    ============================================================ */
 
@@ -400,6 +474,7 @@ const TEXTOS = {
     demo: "Live site",
     codigo: "Source code",
     sitioIdioma: "/en",
+    captura: (n) => `Screenshot of ${n}, scrolling through the live site`,
   },
   es: {
     otro: "[Read in English](README.md)",
@@ -410,6 +485,7 @@ const TEXTOS = {
     demo: "Ver sitio",
     codigo: "Código",
     sitioIdioma: "/es",
+    captura: (n) => `Captura de ${n} recorriendo el sitio en vivo`,
   },
 };
 
@@ -424,7 +500,11 @@ function readme(idioma) {
 
   const bloques = proyectos.map((p) => {
     const demo = p.slug === "portafolio" ? sitio : p.demo;
-    return `${imagen(baseFranja(p, idioma), p.nombre[idioma], demo)}
+    // La ventana es una sola imagen para los dos temas: no necesita <picture>.
+    const captura = ventanas.has(`${p.slug}-${idioma}`)
+      ? `\n\n<a href="${demo}"><img alt="${t.captura(p.nombre[idioma])}" src="${RAW}/${ventanas.get(`${p.slug}-${idioma}`)}" width="100%"></a>`
+      : "";
+    return `${imagen(baseFranja(p, idioma), p.nombre[idioma], demo)}${captura}
 
 ${p.descripcion[idioma]}
 
@@ -475,6 +555,22 @@ for (const idioma of ["en", "es"]) {
       if (idioma === "es" && base === baseFranja(p, "en")) return;
       escribir(`assets/${base}-${tema}.svg`, franja(p, i, tema, idioma));
     });
+  }
+}
+
+/** "slug-idioma" → archivo de su ventana. Sin captura, no hay ventana. */
+const ventanas = new Map();
+for (const idioma of ["en", "es"]) {
+  for (const [i, p] of proyectos.entries()) {
+    const archivo = `ventana-${nombreCaptura(p, idioma)}.svg`;
+    if (!ventanas.has(`${p.slug}-${idioma}`)) {
+      // Las ventanas sin idioma se comparten: se escriben una vez.
+      const yaEscrita = [...ventanas.values()].includes(archivo);
+      const contenido = yaEscrita ? true : await ventana(p, i, idioma);
+      if (!contenido) continue;
+      if (!yaEscrita) escribir(`assets/${archivo}`, contenido);
+      ventanas.set(`${p.slug}-${idioma}`, archivo);
+    }
   }
 }
 escribir("README.md", readme("en"));
