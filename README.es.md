@@ -17,89 +17,56 @@ Estoy disponible para trabajo full-time y freelance.
 
 ## Proyectos
 
-<a href="https://benjamin-pena.vercel.app/es">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-portafolio-es-dark.svg">
-  <img alt="Portafolio" src="assets/proyecto-portafolio-es-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://benjamin-pena.vercel.app/es"><img alt="Captura de Portafolio recorriendo el sitio en vivo" src="assets/ventana-portafolio-es.svg" width="100%"></a>
-
-Mi sitio personal, en español e inglés, con tema claro y oscuro. Cero violaciones de axe-core y Lighthouse 100 en escritorio.
-
-`Next.js 15` `TypeScript` `GSAP` `Lenis` `Tailwind CSS`<br>
-[Ver sitio](https://benjamin-pena.vercel.app/es) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Landing-Page)
-
-<a href="https://atacama-puce.vercel.app">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-atacama-dark.svg">
-  <img alt="Atacama" src="assets/proyecto-atacama-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://atacama-puce.vercel.app"><img alt="Captura de Atacama recorriendo el sitio en vivo" src="assets/ventana-atacama.svg" width="100%"></a>
-
-Ensayo visual sobre el cielo de Atacama y la astronomía en Chile, contado con scroll en siete capítulos y dos idiomas. Accesible de punta a punta, con una versión real para movimiento reducido y no solo las animaciones apagadas.
-
-`React 19` `TypeScript` `GSAP ScrollTrigger` `D3` `Tailwind CSS`<br>
-[Ver sitio](https://atacama-puce.vercel.app) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Atacama)
-
-<a href="https://epicentro-sigma.vercel.app">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-epicentro-dark.svg">
-  <img alt="Epicentro" src="assets/proyecto-epicentro-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://epicentro-sigma.vercel.app"><img alt="Captura de Epicentro recorriendo el sitio en vivo" src="assets/ventana-epicentro.svg" width="100%"></a>
-
-Rastreador de sismos en Chile en tiempo real con datos del USGS. Un mapa en vivo sincronizado con un listado que funciona entero con teclado y lector de pantalla.
-
-`Next.js 15` `TypeScript` `MapLibre` `Recharts` `Tailwind CSS`<br>
-[Ver sitio](https://epicentro-sigma.vercel.app) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Epicentro)
-
-<a href="https://barometro-hazel.vercel.app">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-barometro-dark.svg">
-  <img alt="Barómetro" src="assets/proyecto-barometro-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://barometro-hazel.vercel.app"><img alt="Captura de Barómetro recorriendo el sitio en vivo" src="assets/ventana-barometro.svg" width="100%"></a>
-
-Indicadores económicos de Chile, pensado para lo que la mayoría de los dashboards resuelve mal: series que se publican con distinta frecuencia. Valores del día, histórico, comparación en base 100 y conversor CLP/UF/UTM/USD/EUR, desde mindicador.cl.
-
-`Next.js 15` `TypeScript` `Recharts` `Tailwind CSS`<br>
-[Ver sitio](https://barometro-hazel.vercel.app) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Barometro)
-
-<a href="https://centinela-rho.vercel.app">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-centinela-dark.svg">
-  <img alt="Centinela" src="assets/proyecto-centinela-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://centinela-rho.vercel.app"><img alt="Captura de Centinela recorriendo el sitio en vivo" src="assets/ventana-centinela.svg" width="100%"></a>
-
-Dashboard de monitoreo de incidentes de ciberseguridad. Una sola pantalla donde el analista ve qué hay abierto, qué es crítico y qué conviene mirar ahora.
-
-`React 19` `TypeScript` `Recharts` `Vite` `Tailwind CSS`<br>
-[Ver sitio](https://centinela-rho.vercel.app) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Centinela)
-
-<a href="https://turnera-iota.vercel.app">
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/proyecto-turnera-dark.svg">
-  <img alt="Turnera" src="assets/proyecto-turnera-light.svg" width="100%">
-</picture>
-</a>
-
-<a href="https://turnera-iota.vercel.app"><img alt="Captura de Turnera recorriendo el sitio en vivo" src="assets/ventana-turnera.svg" width="100%"></a>
-
-Sitio de producto para una app ficticia de gestión de turnos en clínicas pequeñas. El producto no existe; el rigor visual y el presupuesto de rendimiento sí (Lighthouse 99/100/100/100).
-
-`React 19` `TypeScript` `Framer Motion` `Vite` `Tailwind CSS`<br>
-[Ver sitio](https://turnera-iota.vercel.app) &nbsp;&nbsp; [Código](https://github.com/Bentonio96/Turnera)
+<table>
+<tr>
+<td width="50%" valign="top">
+<a href="https://benjamin-pena.vercel.app/es"><img src="assets/demo-portafolio-es.webp" alt="Portafolio en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://benjamin-pena.vercel.app/es">Portafolio</a></h3>
+<p>Mi sitio personal, en dos idiomas y dos temas. Lighthouse 100 y cero violaciones de axe-core.</p>
+<p><code>Next.js 15</code> <code>TypeScript</code> <code>GSAP</code> <code>Lenis</code> <code>Tailwind CSS</code></p>
+<p><a href="https://benjamin-pena.vercel.app/es">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Landing-Page">Código</a></p>
+</td>
+<td width="50%" valign="top">
+<a href="https://atacama-puce.vercel.app"><img src="assets/demo-atacama-es.webp" alt="Atacama en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://atacama-puce.vercel.app">Atacama</a></h3>
+<p>Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>GSAP ScrollTrigger</code> <code>D3</code> <code>Tailwind CSS</code></p>
+<p><a href="https://atacama-puce.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Atacama">Código</a></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="https://epicentro-sigma.vercel.app"><img src="assets/demo-epicentro.webp" alt="Epicentro en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://epicentro-sigma.vercel.app">Epicentro</a></h3>
+<p>Sismos de Chile en tiempo real con datos del USGS, con un mapa sincronizado a un listado accesible con teclado.</p>
+<p><code>Next.js 15</code> <code>TypeScript</code> <code>MapLibre</code> <code>Recharts</code> <code>Tailwind CSS</code></p>
+<p><a href="https://epicentro-sigma.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Epicentro">Código</a></p>
+</td>
+<td width="50%" valign="top">
+<a href="https://barometro-hazel.vercel.app"><img src="assets/demo-barometro.webp" alt="Barómetro en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://barometro-hazel.vercel.app">Barómetro</a></h3>
+<p>Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.</p>
+<p><code>Next.js 15</code> <code>TypeScript</code> <code>Recharts</code> <code>Tailwind CSS</code></p>
+<p><a href="https://barometro-hazel.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Barometro">Código</a></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="https://centinela-rho.vercel.app"><img src="assets/demo-centinela.webp" alt="Centinela en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://centinela-rho.vercel.app">Centinela</a></h3>
+<p>Dashboard de incidentes de ciberseguridad: qué está abierto, qué es crítico y qué mirar ahora, en una pantalla.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>Recharts</code> <code>Vite</code> <code>Tailwind CSS</code></p>
+<p><a href="https://centinela-rho.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Centinela">Código</a></p>
+</td>
+<td width="50%" valign="top">
+<a href="https://turnera-iota.vercel.app"><img src="assets/demo-turnera.webp" alt="Turnera en uso: grabación del sitio en vivo" width="100%"></a>
+<h3><a href="https://turnera-iota.vercel.app">Turnera</a></h3>
+<p>Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>Framer Motion</code> <code>Vite</code> <code>Tailwind CSS</code></p>
+<p><a href="https://turnera-iota.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Turnera">Código</a></p>
+</td>
+</tr>
+</table>
 
 ## Stack
 

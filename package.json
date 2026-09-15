@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Perfil de GitHub de Benjamín Peña",
   "scripts": {
-    "capturar": "node scripts/capturar.mjs",
+    "grabar": "node scripts/grabar.mjs",
     "generar": "node scripts/generar.mjs"
   },
   "type": "module",

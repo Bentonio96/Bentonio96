@@ -38,23 +38,27 @@ export const perfil = {
 };
 
 /**
- * `motivo` elige el dibujo animado de la franja (ver MOTIVOS en generar.mjs).
  * El orden de este arreglo es el orden en el perfil: el portafolio va primero.
- * `captura` es opcional; sin ella, capturar.mjs usa `demo`.
+ *
+ * La demo animada de cada uno sale de grabar.mjs, que tiene un guion por
+ * `slug`. `urlDemo` (una URL, o una por idioma) e `idiomasDemo` son
+ * opcionales: sin ellos se graba `demo` una sola vez para los dos idiomas.
+ * Los enlaces del README siempre van a `demo`, salvo que `urlDemo` tenga
+ * una URL por idioma.
  */
 export const proyectos = [
   {
     slug: "portafolio",
     nombre: { en: "Portfolio", es: "Portafolio" },
-    motivo: "lighthouse",
     descripcion: {
-      en: "My personal site, in Spanish and English, with light and dark themes. Zero axe-core violations and Lighthouse 100 on desktop.",
-      es: "Mi sitio personal, en español e inglés, con tema claro y oscuro. Cero violaciones de axe-core y Lighthouse 100 en escritorio.",
+      en: "My personal site, in two languages and two themes. Lighthouse 100 and zero axe-core violations.",
+      es: "Mi sitio personal, en dos idiomas y dos temas. Lighthouse 100 y cero violaciones de axe-core.",
     },
     tecnologias: ["Next.js 15", "TypeScript", "GSAP", "Lenis", "Tailwind CSS"],
     demo: "https://benjamin-pena.vercel.app",
-    // Se captura en cada idioma para que la ventana coincida con el README.
-    captura: {
+    // Se graba en cada idioma para que la demo coincida con el README.
+    idiomasDemo: ["en", "es"],
+    urlDemo: {
       en: "https://benjamin-pena.vercel.app/en",
       es: "https://benjamin-pena.vercel.app/es",
     },
@@ -63,10 +67,11 @@ export const proyectos = [
   {
     slug: "atacama",
     nombre: { en: "Atacama", es: "Atacama" },
-    motivo: "cruz-del-sur",
+    // En la versión en inglés el guion cambia el sitio a inglés.
+    idiomasDemo: ["en", "es"],
     descripcion: {
-      en: "A scroll-driven visual essay about the Atacama sky and astronomy in Chile, in seven chapters and two languages. Accessible end to end, with a real reduced-motion version instead of animations simply switched off.",
-      es: "Ensayo visual sobre el cielo de Atacama y la astronomía en Chile, contado con scroll en siete capítulos y dos idiomas. Accesible de punta a punta, con una versión real para movimiento reducido y no solo las animaciones apagadas.",
+      en: "A scroll-driven visual essay about the Atacama sky, in seven chapters, with a real reduced-motion version.",
+      es: "Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.",
     },
     tecnologias: ["React 19", "TypeScript", "GSAP ScrollTrigger", "D3", "Tailwind CSS"],
     demo: "https://atacama-puce.vercel.app",
@@ -75,34 +80,34 @@ export const proyectos = [
   {
     slug: "epicentro",
     nombre: { en: "Epicentro", es: "Epicentro" },
-    motivo: "sismograma",
     descripcion: {
-      en: "Real-time earthquake tracker for Chile using USGS data. A live map synced with a listing that works end to end with a keyboard and a screen reader.",
-      es: "Rastreador de sismos en Chile en tiempo real con datos del USGS. Un mapa en vivo sincronizado con un listado que funciona entero con teclado y lector de pantalla.",
+      en: "Real-time earthquakes in Chile from USGS data, with a map synced to a fully keyboard-accessible listing.",
+      es: "Sismos de Chile en tiempo real con datos del USGS, con un mapa sincronizado a un listado accesible con teclado.",
     },
     tecnologias: ["Next.js 15", "TypeScript", "MapLibre", "Recharts", "Tailwind CSS"],
     demo: "https://epicentro-sigma.vercel.app",
+    // La demo se graba en el mapa, donde está el listado sincronizado.
+    urlDemo: "https://epicentro-sigma.vercel.app/mapa",
     repo: "Epicentro",
   },
   {
     slug: "barometro",
     nombre: { en: "Barómetro", es: "Barómetro" },
-    motivo: "series",
     descripcion: {
-      en: "Chilean economic indicators, built around what most dashboards get wrong: series published at different frequencies. Daily values, history, base-100 comparison and a CLP/UF/UTM/USD/EUR converter, from mindicador.cl.",
-      es: "Indicadores económicos de Chile, pensado para lo que la mayoría de los dashboards resuelve mal: series que se publican con distinta frecuencia. Valores del día, histórico, comparación en base 100 y conversor CLP/UF/UTM/USD/EUR, desde mindicador.cl.",
+      en: "Chilean economic indicators that handle series published at different frequencies, plus a CLP/UF/USD converter.",
+      es: "Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.",
     },
     tecnologias: ["Next.js 15", "TypeScript", "Recharts", "Tailwind CSS"],
     demo: "https://barometro-hazel.vercel.app",
+    urlDemo: "https://barometro-hazel.vercel.app/conversor",
     repo: "Barometro",
   },
   {
     slug: "centinela",
     nombre: { en: "Centinela", es: "Centinela" },
-    motivo: "incidentes",
     descripcion: {
-      en: "Security incident monitoring dashboard. A single screen where an analyst sees what's open, what's critical and what to look at next.",
-      es: "Dashboard de monitoreo de incidentes de ciberseguridad. Una sola pantalla donde el analista ve qué hay abierto, qué es crítico y qué conviene mirar ahora.",
+      en: "Security incident dashboard: what is open, what is critical and what to look at next, on one screen.",
+      es: "Dashboard de incidentes de ciberseguridad: qué está abierto, qué es crítico y qué mirar ahora, en una pantalla.",
     },
     tecnologias: ["React 19", "TypeScript", "Recharts", "Vite", "Tailwind CSS"],
     demo: "https://centinela-rho.vercel.app",
@@ -111,10 +116,9 @@ export const proyectos = [
   {
     slug: "turnera",
     nombre: { en: "Turnera", es: "Turnera" },
-    motivo: "agenda",
     descripcion: {
-      en: "Product site for a fictional appointment-scheduling app for small clinics. The product isn't real; the visual craft and the performance budget are (Lighthouse 99/100/100/100).",
-      es: "Sitio de producto para una app ficticia de gestión de turnos en clínicas pequeñas. El producto no existe; el rigor visual y el presupuesto de rendimiento sí (Lighthouse 99/100/100/100).",
+      en: "Product site for a fictional scheduling app for small clinics, with a working booking demo. Lighthouse 99/100/100/100.",
+      es: "Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.",
     },
     tecnologias: ["React 19", "TypeScript", "Framer Motion", "Vite", "Tailwind CSS"],
     demo: "https://turnera-iota.vercel.app",

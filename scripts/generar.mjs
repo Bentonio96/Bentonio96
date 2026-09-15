@@ -1,9 +1,12 @@
 /**
- * Genera los SVG animados de assets/ y los dos README a partir de datos.mjs.
+ * Genera el encabezado animado y los dos README a partir de datos.mjs.
  *
  *   npm run generar
  *
- * Por qué SVG y por qué así:
+ * Las demos de los proyectos no salen de aquí: son WebP animados que graba
+ * grabar.mjs (npm run grabar). Este script solo las enlaza.
+ *
+ * Por qué el encabezado es un SVG:
  *
  * GitHub limpia el HTML de los README: no hay JavaScript ni CSS propio. Lo
  * único que se anima es una imagen, y un SVG cargado como <img> sí ejecuta
@@ -11,30 +14,19 @@
  * texto se convierte a trazados con opentype.js: se ve igual en cualquier
  * sistema, con las mismas Bebas Neue e Inter Tight del portafolio.
  *
- * Cada imagen sale en dos versiones, clara y oscura, y el README las elige
- * con <picture> según el tema de GitHub. Los colores son los tokens de
- * "Obsidiana" (globals.css del portafolio), y la tinta oscura #0E1117 es
- * casi idéntica al fondo oscuro de GitHub (#0D1117): el titular queda
- * impreso sobre la página, sin caja alrededor.
- *
- * Reglas de movimiento, heredadas del sitio:
- *   • Una sola entrada orquestada: el nombre. Lo demás es más discreto.
- *   • La curva es la de salida del sitio, cubic-bezier(0.16, 1, 0.3, 1).
- *   • Todo tiene su estado final como estado por defecto. Con
- *     prefers-reduced-motion se quitan las animaciones y la imagen queda
- *     completa y quieta.
+ * Sale en versión clara y oscura, y el README las elige con <picture>
+ * según el tema de GitHub. Los colores son los tokens de "Obsidiana"
+ * (globals.css del portafolio). Con prefers-reduced-motion se quitan las
+ * animaciones y el encabezado queda completo y quieto.
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import opentype from "opentype.js";
-import sharp from "sharp";
 import { perfil, proyectos, stack } from "./datos.mjs";
 
 const RAIZ = join(dirname(fileURLToPath(import.meta.url)), "..");
-const ASSETS = join(RAIZ, "assets");
-mkdirSync(ASSETS, { recursive: true });
 
 function cargarFuente(ruta) {
   const b = readFileSync(join(RAIZ, "node_modules", ruta));
@@ -43,51 +35,20 @@ function cargarFuente(ruta) {
 
 const bebas = cargarFuente("@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff");
 const interLigera = cargarFuente("@fontsource/inter-tight/files/inter-tight-latin-300-normal.woff");
-const interNormal = cargarFuente("@fontsource/inter-tight/files/inter-tight-latin-400-normal.woff");
-
-/* ============================================================
-   TOKENS — copiados de globals.css del portafolio
-   ============================================================ */
 
 const TEMAS = {
-  light: {
-    texto: "#0E1117",
-    atenuado: "#414A58",
-    tenue: "#555E6C",
-    borde: "#E0E3E9",
-    bordeFuerte: "#C6CDD8",
-    acento: "#4335C9",
-    vivo: "#6C5CFF",
-  },
-  dark: {
-    texto: "#F1F3F7",
-    atenuado: "#AFB7C4",
-    tenue: "#8B94A3",
-    borde: "#232A36",
-    bordeFuerte: "#3A4353",
-    acento: "#A79BFF",
-    vivo: "#6C5CFF",
-  },
+  light: { texto: "#0E1117", atenuado: "#414A58", bordeFuerte: "#C6CDD8", acento: "#4335C9" },
+  dark: { texto: "#F1F3F7", atenuado: "#AFB7C4", bordeFuerte: "#3A4353", acento: "#A79BFF" },
 };
 
 const ANCHO = 840;
 const SALIDA = "cubic-bezier(0.16, 1, 0.3, 1)";
-
-/* ============================================================
-   TIPOGRAFÍA A TRAZADOS
-   ============================================================ */
-
 const r2 = (n) => Math.round(n * 100) / 100;
 
-/** Caja de un texto a un tamaño dado, con el origen en la línea base. */
-function caja(fuente, texto, tam) {
-  return fuente.getPath(texto, 0, 0, tam).getBoundingBox();
-}
+const caja = (fuente, texto, tam) => fuente.getPath(texto, 0, 0, tam).getBoundingBox();
+const trazado = (fuente, texto, x, y, tam) => fuente.getPath(texto, x, y, tam).toPathData(2);
 
-/**
- * Coloca cada glifo por separado para poder animarlos uno a uno. Respeta
- * el kerning de la fuente. Devuelve los trazados y dónde termina el texto.
- */
+/** Un trazado por glifo, para animarlos uno a uno. Respeta el kerning. */
 function glifos(fuente, texto, x, y, tam) {
   const escala = tam / fuente.unitsPerEm;
   const lista = fuente.stringToGlyphs(texto);
@@ -99,47 +60,17 @@ function glifos(fuente, texto, x, y, tam) {
     cursor += g.advanceWidth * escala;
     if (i < lista.length - 1) cursor += fuente.getKerningValue(g, lista[i + 1]) * escala;
   });
-  return { trazados: salida, fin: cursor };
+  return salida;
 }
 
-const trazado = (fuente, texto, x, y, tam) => fuente.getPath(texto, x, y, tam).toPathData(2);
-
-/* ============================================================
-   ESQUELETO SVG
-   ============================================================ */
-
-const CSS_BASE = `
-.a { animation-fill-mode: both; animation-timing-function: ${SALIDA}; }
-.caja { transform-box: fill-box; }
-@keyframes trazar { from { stroke-dashoffset: 1; } }
-@keyframes crecer-x { from { transform: scaleX(0); } }
-@keyframes crecer-y { from { transform: scaleY(0); } }
-@keyframes aparecer { from { transform: scale(0); } }
-@keyframes titilar { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-@keyframes onda { from { transform: scale(1); opacity: 0.9; } to { transform: scale(5); opacity: 0; } }
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; }
-}`;
-
-function svg({ alto, titulo, css = "", cuerpo }) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${ANCHO}" height="${r2(alto)}" viewBox="0 0 ${ANCHO} ${r2(alto)}" role="img" aria-label="${titulo}">
-<title>${titulo}</title>
-<style>${CSS_BASE}${css}
-</style>
-${cuerpo}
-</svg>
-`;
-}
-
-/** Atajo para style="animation: …" con retraso en segundos. */
 const anim = (nombre, dur, retraso, extra = "") =>
   `animation-name:${nombre};animation-duration:${dur}s;animation-delay:${r2(retraso)}s;${extra}`;
 
 /* ============================================================
    ENCABEZADO
-   Nombre y apellido en una sola línea de cartel, a todo el ancho, con
-   el lema debajo. Iba en dos líneas, pero en escritorio el nombre llenaba
-   la pantalla entera antes de que asomara el primer párrafo.
+   Nombre en la condensada a la mitad del ancho y el lema a su derecha,
+   apoyado en la misma línea base. Primero fue un cartel a todo el ancho,
+   pero en escritorio tapaba la pantalla antes del primer párrafo.
 
    Cada letra entra girando sobre su canto inferior, como en el hero del
    sitio. SVG no tiene perspectiva real, pero un giro en X sin perspectiva
@@ -151,367 +82,123 @@ function encabezado(tema, idioma) {
   const nombre = perfil.nombre.toUpperCase();
   const completo = `${nombre} ${perfil.apellido.toUpperCase()}`;
 
-  // Tamaño tal que el nombre completo ocupe el ancho.
   const ref = caja(bebas, completo, 100);
-  const tam = (100 * ANCHO) / (ref.x2 - ref.x1);
+  const tam = (100 * ANCHO * 0.5) / (ref.x2 - ref.x1);
   const cj = caja(bebas, completo, tam);
-  // -y1 es lo que sube la tilde de la Í sobre la línea base.
-  const base = -cj.y1 + 2;
+  const base = -cj.y1 + 2; // lo que sube la tilde de la Í
 
-  // El espacio no tiene trazado: los primeros glifos son el nombre y el
-  // resto, el apellido, que va en el color de acento.
   let i = 0;
   const letras = glifos(bebas, completo, -cj.x1, base, tam)
-    .trazados.map((d, n) => {
+    .map((d, n) => {
+      // El espacio no tiene trazado: los primeros glifos son el nombre.
       const color = n < [...nombre].length ? c.texto : c.acento;
       return `<path class="a caja letra" fill="${color}" style="${anim("voltear", 1.2, 0.15 + i++ * 0.04)}" d="${d}"/>`;
     })
     .join("\n");
 
-  // Lema: una línea bajo el nombre. Sus palabras suben desde debajo de
-  // un recorte, como si salieran de detrás de la línea.
-  const texto = perfil.lema[idioma].join(" ");
-  let tamLema = 27;
-  while (caja(interLigera, texto, tamLema).x2 > ANCHO - 2) tamLema -= 0.5;
-  const baseLema = base + tam * 0.14 + tamLema;
-  const recorte = `<clipPath id="lema"><rect x="-4" y="${r2(baseLema - tamLema - 4)}" width="${ANCHO + 8}" height="${r2(tamLema * 1.45)}"/></clipPath>`;
-  let x = 0;
-  const palabras = texto
-    .split(" ")
-    .map((p, n) => {
-      const d = trazado(interLigera, p, x, baseLema, tamLema);
-      x += interLigera.getAdvanceWidth(p + " ", tamLema);
-      return `<path class="a caja" fill="${c.atenuado}" style="${anim("subir", 1, 0.7 + n * 0.05)}" d="${d}"/>`;
+  // Lema en dos líneas, la última sobre la base del nombre. Cada línea
+  // recorta sus palabras, que suben desde debajo.
+  const inicio = cj.x2 - cj.x1 + tam * 0.22;
+  const lineas = perfil.lema[idioma];
+  let tamLema = 21;
+  while (inicio + Math.max(...lineas.map((l) => caja(interLigera, l, tamLema).x2)) > ANCHO - 2) tamLema -= 0.5;
+  const interlineado = tamLema * 1.3;
+
+  let palabra = 0;
+  const lema = lineas
+    .map((texto, n) => {
+      const y = base - (lineas.length - 1 - n) * interlineado;
+      let x = inicio;
+      const palabras = texto
+        .split(" ")
+        .map((p) => {
+          const d = trazado(interLigera, p, x, y, tamLema);
+          x += interLigera.getAdvanceWidth(`${p} `, tamLema);
+          return `<path class="a caja" fill="${c.atenuado}" style="${anim("subir", 1, 0.6 + palabra++ * 0.05)}" d="${d}"/>`;
+        })
+        .join("");
+      return `<clipPath id="l${n}"><rect x="${r2(inicio - 4)}" y="${r2(y - tamLema - 4)}" width="${ANCHO}" height="${r2(tamLema * 1.45)}"/></clipPath><g clip-path="url(#l${n})">${palabras}</g>`;
     })
-    .join("");
-  const lema = `${recorte}<g clip-path="url(#lema)">${palabras}</g>`;
+    .join("\n");
 
-  const yRegla = baseLema + 24;
-  const regla = `<rect class="a caja" x="0" y="${r2(yRegla)}" width="${ANCHO}" height="1" fill="${c.bordeFuerte}" style="${anim("crecer-x", 1.6, 1, "transform-origin:0 0;")}"/>`;
+  const yRegla = base + 18;
+  const titulo = `${perfil.nombre} ${perfil.apellido}. ${lineas.join(" ")}`;
 
-  const css = `
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${ANCHO}" height="${r2(yRegla + 1)}" viewBox="0 0 ${ANCHO} ${r2(yRegla + 1)}" role="img" aria-label="${titulo}">
+<title>${titulo}</title>
+<style>
+.a { animation-fill-mode: both; animation-timing-function: ${SALIDA}; }
+.caja { transform-box: fill-box; }
 .letra { transform-origin: 50% 100%; }
 @keyframes voltear { from { transform: translateY(${r2(tam * 0.3)}px) scaleY(0); } }
-@keyframes subir { from { transform: translateY(${r2(tamLema * 1.2)}px); } }`;
-
-  return svg({
-    alto: yRegla + 2,
-    titulo: `${perfil.nombre} ${perfil.apellido}. ${texto}`,
-    css,
-    cuerpo: `${letras}\n${lema}\n${regla}`,
-  });
-}
-
-/* ============================================================
-   MOTIVOS
-   Un dibujo por proyecto, en una caja de 170 × 96, a la derecha de
-   cada franja. Líneas en gris y un solo elemento violeta. Se dibujan
-   una vez; solo lo que en el tema está "vivo" (el cielo, un sismógrafo)
-   sigue moviéndose, y muy despacio.
-   ============================================================ */
-
-/** Generador pseudoaleatorio con semilla: el dibujo sale igual cada vez. */
-function azar(semilla) {
-  let s = semilla;
-  return () => {
-    s = (s + 0x6d2b79f5) | 0;
-    let t = Math.imul(s ^ (s >>> 15), 1 | s);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-const linea = (pts) => "M" + pts.map(([x, y]) => `${r2(x)} ${r2(y)}`).join("L");
-
-const MOTIVOS = {
-  /** La Cruz del Sur con los Punteros (α y β Centauri), como se ve desde Chile. */
-  "cruz-del-sur"(c, t0) {
-    const estrellas = [
-      // [x, y, radio, color]
-      [92, 8, 2.6, c.texto], // Gacrux
-      [102, 88, 3.4, c.vivo], // Acrux, la más brillante
-      [60, 42, 2.9, c.texto], // Mimosa
-      [132, 36, 2.1, c.texto], // δ Crucis
-      [117, 62, 1.5, c.texto], // ε Crucis
-      [10, 70, 2.9, c.texto], // α Centauri
-      [32, 58, 2.3, c.texto], // β Centauri
-    ];
-    const tenues = [[22, 12], [48, 88], [152, 14], [164, 78], [76, 72], [144, 92], [4, 36], [160, 50]];
-    const trazos = [
-      [[92, 8], [102, 88]],
-      [[60, 42], [132, 36]],
-    ]
-      .map(
-        (p, n) =>
-          `<path class="a" pathLength="1" fill="none" stroke="${c.bordeFuerte}" stroke-width="1" stroke-dasharray="1.01 2" d="${linea(p)}" style="${anim("trazar", 1.4, t0 + 0.5 + n * 0.25)}"/>`,
-      )
-      .join("");
-    const brillantes = estrellas
-      .map(
-        ([x, y, r, color], n) =>
-          `<circle class="a caja" cx="${x}" cy="${y}" r="${r}" fill="${color}" style="transform-origin:center;animation:aparecer 0.7s ${SALIDA} ${r2(t0 + n * 0.08)}s both, titilar ${4 + (n % 3)}s ease-in-out ${r2(t0 + 2 + n * 0.7)}s infinite"/>`,
-      )
-      .join("");
-    const fondo = tenues
-      .map(
-        ([x, y], n) =>
-          `<circle cx="${x}" cy="${y}" r="0.9" fill="${c.tenue}" style="animation:titilar ${3 + (n % 4)}s ease-in-out ${r2(n * 0.6)}s infinite"/>`,
-      )
-      .join("");
-    return trazos + fondo + brillantes;
-  },
-
-  /** Un sismograma: ruido de fondo, el sismo, y la pluma que sigue escribiendo. */
-  sismograma(c, t0) {
-    const rnd = azar(11);
-    const pts = [];
-    for (let x = 0; x <= 150; x += 1.5) {
-      let y = 48 + (rnd() - 0.5) * 3;
-      if (x >= 50) {
-        const amp = 40 * Math.exp(-(x - 50) / 24);
-        y += amp * Math.sin((x - 50) * 1.7) * (0.55 + 0.45 * rnd());
-      }
-      pts.push([x, Math.min(92, Math.max(4, y))]);
-    }
-    const [px, py] = pts.at(-1);
-    return `<path class="a" pathLength="1" fill="none" stroke="${c.tenue}" stroke-width="1.25" stroke-linejoin="round" stroke-dasharray="1.01 2" d="${linea(pts)}" style="${anim("trazar", 2.2, t0, "animation-timing-function:cubic-bezier(0.4,0,0.6,1);")}"/>
-<circle class="caja" cx="${px + 6}" cy="${py}" r="3" fill="none" stroke="${c.vivo}" stroke-width="1" style="transform-origin:center;opacity:0;animation:onda 2.8s ease-out ${r2(t0 + 2.3)}s infinite"/>
-<circle class="a caja" cx="${px + 6}" cy="${py}" r="3" fill="${c.vivo}" style="transform-origin:center;${anim("aparecer", 0.6, t0 + 2.1)}"/>`;
-  },
-
-  /** Dos series que se publican con distinta frecuencia: escalones y diaria. */
-  series(c, t0) {
-    const rnd = azar(5);
-    let escalones = "M0 72";
-    let y = 72;
-    for (let x = 17; x <= 170; x += 17) {
-      escalones += `H${x}V${r2((y -= 3 + rnd() * 3))}`;
-    }
-    const diaria = [];
-    let v = 74;
-    for (let x = 0; x <= 170; x += 2) {
-      v += (rnd() - 0.56) * 5;
-      v = Math.min(84, Math.max(12, v));
-      diaria.push([x, v]);
-    }
-    return `<rect class="a caja" x="0" y="92" width="170" height="1" fill="${c.bordeFuerte}" style="transform-origin:0 0;${anim("crecer-x", 1.2, t0)}"/>
-<path fill="none" stroke="${c.borde}" stroke-width="1" stroke-dasharray="3 3" d="M0 50H170"/>
-<path class="a" pathLength="1" fill="none" stroke="${c.tenue}" stroke-width="1.25" stroke-dasharray="1.01 2" d="${escalones}" style="${anim("trazar", 1.8, t0 + 0.2)}"/>
-<path class="a" pathLength="1" fill="none" stroke="${c.vivo}" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="1.01 2" d="${linea(diaria)}" style="${anim("trazar", 2, t0 + 0.6)}"/>`;
-  },
-
-  /** Histograma de incidentes: el crítico en violeta. */
-  incidentes(c, t0) {
-    const altos = [22, 34, 28, 46, 38, 78, 54, 30, 42, 26, 18];
-    const critico = altos.indexOf(Math.max(...altos));
-    const barras = altos
-      .map(
-        (h, n) =>
-          `<rect class="a caja" x="${n * 15 + 5}" y="${92 - h}" width="9" height="${h}" fill="${n === critico ? c.vivo : c.bordeFuerte}" style="transform-origin:50% 100%;${anim("crecer-y", 1.1, t0 + n * 0.06)}"/>`,
-      )
-      .join("");
-    return `${barras}<rect class="a caja" x="0" y="92" width="170" height="1" fill="${c.tenue}" style="transform-origin:0 0;${anim("crecer-x", 1, t0)}"/>`;
-  },
-
-  /** Una semana de agenda: turnos tomados y uno que se reserva al final. */
-  agenda(c, t0) {
-    const tomados = ["0,1", "1,0", "1,2", "2,3", "3,1", "4,0", "4,2", "0,3"];
-    const nuevo = "2,1";
-    const celdas = [];
-    const llenos = [];
-    for (let col = 0; col < 5; col++) {
-      for (let fila = 0; fila < 4; fila++) {
-        const x = col * 33 + 3;
-        const y = fila * 21 + 6;
-        celdas.push(`<rect x="${x + 0.5}" y="${y + 0.5}" width="26" height="14" fill="none" stroke="${c.borde}"/>`);
-        const k = `${col},${fila}`;
-        if (tomados.includes(k) || k === nuevo) {
-          const retraso = k === nuevo ? t0 + 1.5 : t0 + 0.2 + col * 0.12 + fila * 0.05;
-          llenos.push(
-            `<rect class="a caja" x="${x}" y="${y}" width="27" height="15" fill="${k === nuevo ? c.vivo : c.bordeFuerte}" style="transform-origin:center;${anim("aparecer", 0.7, retraso)}"/>`,
-          );
-        }
-      }
-    }
-    return celdas.join("") + llenos.join("");
-  },
-
-  /** El anillo de Lighthouse cerrándose en 100. */
-  lighthouse(c, t0) {
-    const cx = 132;
-    const cy = 48;
-    const r = 34;
-    const cifra = caja(interNormal, "100", 22);
-    const x = cx - (cifra.x2 - cifra.x1) / 2 - cifra.x1;
-    const y = cy - (cifra.y1 + cifra.y2) / 2;
-    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c.borde}" stroke-width="3"/>
-<circle class="a" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${c.vivo}" stroke-width="3" pathLength="1" stroke-dasharray="1.01 2" transform="rotate(-90 ${cx} ${cy})" style="${anim("trazar", 1.8, t0)}"/>
-<path fill="${c.texto}" d="${trazado(interNormal, "100", x, y, 22)}"/>`;
-  },
-};
-
-/* ============================================================
-   FRANJA DE PROYECTO
-   El nombre en la condensada, quieto. Encima, una regla capilar que se
-   dibuja de izquierda a derecha (las "trazo-superior" del sitio), y a la
-   derecha el motivo. Cada franja arranca un poco después que la anterior:
-   como GitHub carga todas las imágenes juntas, se leen en cascada.
-   ============================================================ */
-
-const ALTO_FRANJA = 132;
-
-function franja(p, indice, tema, idioma) {
-  const c = TEMAS[tema];
-  const t0 = 1.25 + indice * 0.2;
-  const texto = p.nombre[idioma].toUpperCase();
-  const tam = 84;
-  const cj = caja(bebas, texto, tam);
-  const base = 108;
-
-  return svg({
-    alto: ALTO_FRANJA,
-    titulo: p.nombre[idioma],
-    cuerpo: `<rect class="a caja" x="0" y="0" width="${ANCHO}" height="1" fill="${c.bordeFuerte}" style="transform-origin:0 0;${anim("crecer-x", 1.4, t0 - 0.3)}"/>
-<path fill="${c.texto}" d="${trazado(bebas, texto, -cj.x1, base, tam)}"/>
-<g transform="translate(${ANCHO - 170} 22)">${MOTIVOS[p.motivo](c, t0)}</g>`,
-  });
-}
-
-/* ============================================================
-   VENTANA DE PROYECTO
-   Una ventana de navegador con la captura real del sitio (hecha por
-   capturar.mjs). Primero corre la barra de carga violeta bajo la barra
-   de direcciones; después la página baja sola, se detiene y vuelve,
-   en un ciclo lento que sigue ahí cuando alguien llega con el scroll.
-
-   Un SVG cargado como <img> no puede pedir archivos, así que la captura
-   va incrustada en base64. Es un solo archivo para los dos temas de
-   GitHub: la ventana es oscura, como casi todos los proyectos.
-   ============================================================ */
-
-const VENTANA = {
-  barra: 34,
-  vista: 440,
-  marco: "#0E1117",
-  barraFondo: "#141922",
-  borde: "#232A36",
-  bordeFuerte: "#3A4353",
-  tenue: "#8B94A3",
-  vivo: "#6C5CFF",
-};
-
-/** Archivo de captura: el portafolio tiene una por idioma. */
-const nombreCaptura = (p, idioma) => (p.captura ? `${p.slug}-${idioma}` : p.slug);
-
-async function ventana(p, indice, idioma) {
-  const ruta = join(RAIZ, "capturas", `${nombreCaptura(p, idioma)}.jpg`);
-  if (!existsSync(ruta)) return null;
-
-  const v = VENTANA;
-  const { width, height } = await sharp(ruta).metadata();
-  const anchoVista = ANCHO - 2;
-  const altoImagen = (height * anchoVista) / width;
-  const recorrido = Math.max(0, altoImagen - v.vista);
-  const alto = v.barra + v.vista + 1;
-  const t0 = 1.6 + indice * 0.2;
-  const host = new URL(p.captura?.[idioma] ?? p.demo).host;
-
-  const cajaHost = caja(interNormal, host, 12);
-  const xHost = ANCHO / 2 - (cajaHost.x2 - cajaHost.x1) / 2 - cajaHost.x1;
-  const datos = readFileSync(ruta).toString("base64");
-
-  // Esquinas inferiores redondeadas; arriba la tapa la barra.
-  const r = 6;
-  const recorte = `M1 ${v.barra}H${ANCHO - 1}V${alto - r}Q${ANCHO - 1} ${alto - 1} ${ANCHO - 1 - r} ${alto - 1}H${1 + r}Q1 ${alto - 1} 1 ${alto - r}Z`;
-
-  const css = `
-.carga { transform-box: fill-box; transform-origin: 0 0; opacity: 0; animation: cargar 1.4s ${SALIDA} ${r2(t0)}s both; }
-.pagina { animation: recorrer 22s ease-in-out ${r2(t0 + 1.4)}s infinite; }
-@keyframes cargar { 0% { transform: scaleX(0); opacity: 1; } 70% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(1); opacity: 0; } }
-@keyframes recorrer {
-  0%, 12% { transform: translateY(0); }
-  46%, 58% { transform: translateY(-${r2(recorrido)}px); }
-  92%, 100% { transform: translateY(0); }
-}`;
-
-  return svg({
-    alto,
-    titulo: idioma === "es" ? `Captura de ${p.nombre.es}` : `Screenshot of ${p.nombre.en}`,
-    css,
-    cuerpo: `<rect x="0.5" y="0.5" width="${ANCHO - 1}" height="${alto - 1}" rx="${r}" fill="${v.marco}" stroke="${v.bordeFuerte}"/>
-<clipPath id="vista"><path d="${recorte}"/></clipPath>
-<g clip-path="url(#vista)"><image class="pagina" x="1" y="${v.barra}" width="${anchoVista}" height="${r2(altoImagen)}" preserveAspectRatio="none" href="data:image/jpeg;base64,${datos}"/></g>
-<path d="M${1 + r} 1H${ANCHO - 1 - r}Q${ANCHO - 1} 1 ${ANCHO - 1} ${1 + r}V${v.barra}H1V${1 + r}Q1 1 ${1 + r} 1Z" fill="${v.barraFondo}"/>
-<rect x="1" y="${v.barra - 1}" width="${ANCHO - 2}" height="1" fill="${v.borde}"/>
-${[20, 36, 52].map((cx) => `<circle cx="${cx}" cy="${v.barra / 2}" r="4.5" fill="${v.bordeFuerte}"/>`).join("")}
-<rect x="${ANCHO / 2 - 180}" y="6" width="360" height="22" rx="4" fill="${v.marco}" stroke="${v.borde}"/>
-<path fill="${v.tenue}" d="${trazado(interNormal, host, xHost, 21.5, 12)}"/>
-<rect class="carga" x="1" y="${v.barra - 1}" width="${ANCHO - 2}" height="2" fill="${v.vivo}"/>`,
-  });
+@keyframes subir { from { transform: translateY(${r2(tamLema * 1.2)}px); } }
+@keyframes crecer-x { from { transform: scaleX(0); } }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+${letras}
+${lema}
+<rect class="a caja" x="0" y="${r2(yRegla)}" width="${ANCHO}" height="1" fill="${c.bordeFuerte}" style="${anim("crecer-x", 1.6, 0.9, "transform-origin:0 0;")}"/>
+</svg>
+`;
 }
 
 /* ============================================================
    README
+   Los proyectos van en una grilla de dos columnas: la demo arriba y el
+   texto corto debajo. El HTML de la tabla va sin líneas en blanco, o
+   GitHub corta el bloque y lo mezcla con Markdown.
    ============================================================ */
-
-const RAW = "assets";
-
-function imagen(nombreBase, alt, enlace) {
-  const pic = `<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="${RAW}/${nombreBase}-dark.svg">
-  <img alt="${alt}" src="${RAW}/${nombreBase}-light.svg" width="100%">
-</picture>`;
-  return enlace ? `<a href="${enlace}">\n${pic}\n</a>` : pic;
-}
 
 const TEXTOS = {
   en: {
     otro: "[Leer en español](README.es.md)",
     sitio: "Portfolio",
-    cv: "CV (PDF)",
     proyectos: "Projects",
-    stack: "Stack",
     demo: "Live site",
     codigo: "Source code",
-    sitioIdioma: "/en",
-    captura: (n) => `Screenshot of ${n}, scrolling through the live site`,
+    alt: (n) => `${n} in use: recording of the live site`,
   },
   es: {
     otro: "[Read in English](README.md)",
     sitio: "Portafolio",
-    cv: "CV (PDF)",
     proyectos: "Proyectos",
-    stack: "Stack",
     demo: "Ver sitio",
     codigo: "Código",
-    sitioIdioma: "/es",
-    captura: (n) => `Captura de ${n} recorriendo el sitio en vivo`,
+    alt: (n) => `${n} en uso: grabación del sitio en vivo`,
   },
 };
 
-/** Los archivos de la franja solo llevan idioma si el nombre cambia. */
-const baseFranja = (p, idioma) =>
-  p.nombre.en === p.nombre.es ? `proyecto-${p.slug}` : `proyecto-${p.slug}-${idioma}`;
+function demoDe(p, idioma) {
+  const nombre = p.idiomasDemo ? `${p.slug}-${idioma}` : p.slug;
+  const ruta = `assets/demo-${nombre}.webp`;
+  return existsSync(join(RAIZ, ruta)) ? ruta : null;
+}
+
+function celda(p, idioma) {
+  const t = TEXTOS[idioma];
+  const sitio = (typeof p.urlDemo === "object" && p.urlDemo[idioma]) || p.demo;
+  const demo = demoDe(p, idioma);
+  return [
+    `<td width="50%" valign="top">`,
+    demo ? `<a href="${sitio}"><img src="${demo}" alt="${t.alt(p.nombre[idioma])}" width="100%"></a>` : "",
+    `<h3><a href="${sitio}">${p.nombre[idioma]}</a></h3>`,
+    `<p>${p.descripcion[idioma]}</p>`,
+    `<p>${p.tecnologias.map((x) => `<code>${x}</code>`).join(" ")}</p>`,
+    `<p><a href="${sitio}">${t.demo}</a> &nbsp; <a href="https://github.com/${perfil.usuario}/${p.repo}">${t.codigo}</a></p>`,
+    `</td>`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
 
 function readme(idioma) {
   const t = TEXTOS[idioma];
-  const sitio = perfil.sitio + t.sitioIdioma;
-  const u = perfil.usuario;
+  const sitio = proyectos.find((p) => p.slug === "portafolio")?.urlDemo?.[idioma] ?? perfil.sitio;
 
-  const bloques = proyectos.map((p) => {
-    const demo = p.slug === "portafolio" ? sitio : p.demo;
-    // La ventana es una sola imagen para los dos temas: no necesita <picture>.
-    const captura = ventanas.has(`${p.slug}-${idioma}`)
-      ? `\n\n<a href="${demo}"><img alt="${t.captura(p.nombre[idioma])}" src="${RAW}/${ventanas.get(`${p.slug}-${idioma}`)}" width="100%"></a>`
-      : "";
-    return `${imagen(baseFranja(p, idioma), p.nombre[idioma], demo)}${captura}
-
-${p.descripcion[idioma]}
-
-${p.tecnologias.map((x) => `\`${x}\``).join(" ")}<br>
-[${t.demo}](${demo}) &nbsp;&nbsp; [${t.codigo}](https://github.com/${u}/${p.repo})
-`;
-  });
+  const filas = [];
+  for (let i = 0; i < proyectos.length; i += 2) {
+    filas.push(`<tr>\n${proyectos.slice(i, i + 2).map((p) => celda(p, idioma)).join("\n")}\n</tr>`);
+  }
 
   const filasStack = stack
     .map((g) => `| ${g.titulo[idioma]} | ${g.items.map((x) => `\`${x}\``).join(" ")} |`)
@@ -519,16 +206,24 @@ ${p.tecnologias.map((x) => `\`${x}\``).join(" ")}<br>
 
   return `<!-- Generado por scripts/generar.mjs. Edita scripts/datos.mjs y corre \`npm run generar\`. -->
 
-${imagen(`encabezado-${idioma}`, `${perfil.nombre} ${perfil.apellido}. ${perfil.lema[idioma].join(" ")}`, sitio)}
+<a href="${sitio}">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/encabezado-${idioma}-dark.svg">
+  <img alt="${perfil.nombre} ${perfil.apellido}. ${perfil.lema[idioma].join(" ")}" src="assets/encabezado-${idioma}-light.svg" width="100%">
+</picture>
+</a>
 
 ${perfil.intro[idioma].join("\n\n")}
 
-**[${t.sitio}](${sitio})** &nbsp;&nbsp; [LinkedIn](${perfil.linkedin}) &nbsp;&nbsp; [${t.cv}](${perfil.cv}) &nbsp;&nbsp; [${perfil.email}](mailto:${perfil.email}) &nbsp;&nbsp; ${t.otro}
+**[${t.sitio}](${sitio})** &nbsp;&nbsp; [LinkedIn](${perfil.linkedin}) &nbsp;&nbsp; [CV (PDF)](${perfil.cv}) &nbsp;&nbsp; [${perfil.email}](mailto:${perfil.email}) &nbsp;&nbsp; ${t.otro}
 
 ## ${t.proyectos}
 
-${bloques.join("\n")}
-## ${t.stack}
+<table>
+${filas.join("\n")}
+</table>
+
+## Stack
 
 | | |
 |---|---|
@@ -549,31 +244,11 @@ const escribir = (nombre, contenido) => {
 for (const idioma of ["en", "es"]) {
   for (const tema of ["light", "dark"]) {
     escribir(`assets/encabezado-${idioma}-${tema}.svg`, encabezado(tema, idioma));
-    proyectos.forEach((p, i) => {
-      const base = baseFranja(p, idioma);
-      // Las franjas compartidas se escriben una sola vez.
-      if (idioma === "es" && base === baseFranja(p, "en")) return;
-      escribir(`assets/${base}-${tema}.svg`, franja(p, i, tema, idioma));
-    });
-  }
-}
-
-/** "slug-idioma" → archivo de su ventana. Sin captura, no hay ventana. */
-const ventanas = new Map();
-for (const idioma of ["en", "es"]) {
-  for (const [i, p] of proyectos.entries()) {
-    const archivo = `ventana-${nombreCaptura(p, idioma)}.svg`;
-    if (!ventanas.has(`${p.slug}-${idioma}`)) {
-      // Las ventanas sin idioma se comparten: se escriben una vez.
-      const yaEscrita = [...ventanas.values()].includes(archivo);
-      const contenido = yaEscrita ? true : await ventana(p, i, idioma);
-      if (!contenido) continue;
-      if (!yaEscrita) escribir(`assets/${archivo}`, contenido);
-      ventanas.set(`${p.slug}-${idioma}`, archivo);
-    }
   }
 }
 escribir("README.md", readme("en"));
 escribir("README.es.md", readme("es"));
 
-console.log(`Listo: ${escritos.length} archivos.\n  ${escritos.join("\n  ")}`);
+const sinDemo = proyectos.flatMap((p) => ["en", "es"].filter((i) => !demoDe(p, i)).map((i) => `${p.slug} (${i})`));
+console.log(`Listo: ${escritos.length} archivos.`);
+if (sinDemo.length) console.log(`Sin demo grabada: ${sinDemo.join(", ")}. Corre npm run grabar.`);
