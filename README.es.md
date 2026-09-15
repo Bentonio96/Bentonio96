@@ -20,50 +20,50 @@ Estoy disponible para trabajo full-time y freelance.
 <table>
 <tr>
 <td width="50%" valign="top">
-<a href="https://benjamin-pena.vercel.app/es"><img src="assets/demo-portafolio-es.webp" alt="Portafolio en uso: grabación del sitio en vivo" width="100%"></a>
+<a href="https://benjamin-pena.vercel.app/es"><img src="assets/captura-portafolio-es.webp" alt="Página principal de Portafolio" width="100%"></a>
 <h3><a href="https://benjamin-pena.vercel.app/es">Portafolio</a></h3>
 <p>Mi sitio personal, en dos idiomas y dos temas. Lighthouse 100 y cero violaciones de axe-core.</p>
 <p><code>Next.js 15</code> <code>TypeScript</code> <code>GSAP</code> <code>Lenis</code> <code>Tailwind CSS</code></p>
 <p><a href="https://benjamin-pena.vercel.app/es">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Landing-Page">Código</a></p>
 </td>
 <td width="50%" valign="top">
-<a href="https://atacama-puce.vercel.app"><img src="assets/demo-atacama-es.webp" alt="Atacama en uso: grabación del sitio en vivo" width="100%"></a>
-<h3><a href="https://atacama-puce.vercel.app">Atacama</a></h3>
-<p>Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.</p>
-<p><code>React 19</code> <code>TypeScript</code> <code>GSAP ScrollTrigger</code> <code>D3</code> <code>Tailwind CSS</code></p>
-<p><a href="https://atacama-puce.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Atacama">Código</a></p>
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-<a href="https://epicentro-sigma.vercel.app"><img src="assets/demo-epicentro.webp" alt="Epicentro en uso: grabación del sitio en vivo" width="100%"></a>
+<a href="https://epicentro-sigma.vercel.app"><img src="assets/captura-epicentro.webp" alt="Página principal de Epicentro" width="100%"></a>
 <h3><a href="https://epicentro-sigma.vercel.app">Epicentro</a></h3>
 <p>Sismos de Chile en tiempo real con datos del USGS, con un mapa sincronizado a un listado accesible con teclado.</p>
 <p><code>Next.js 15</code> <code>TypeScript</code> <code>MapLibre</code> <code>Recharts</code> <code>Tailwind CSS</code></p>
 <p><a href="https://epicentro-sigma.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Epicentro">Código</a></p>
 </td>
-<td width="50%" valign="top">
-<a href="https://barometro-hazel.vercel.app"><img src="assets/demo-barometro.webp" alt="Barómetro en uso: grabación del sitio en vivo" width="100%"></a>
-<h3><a href="https://barometro-hazel.vercel.app">Barómetro</a></h3>
-<p>Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.</p>
-<p><code>Next.js 15</code> <code>TypeScript</code> <code>Recharts</code> <code>Tailwind CSS</code></p>
-<p><a href="https://barometro-hazel.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Barometro">Código</a></p>
-</td>
 </tr>
 <tr>
 <td width="50%" valign="top">
-<a href="https://centinela-rho.vercel.app"><img src="assets/demo-centinela.webp" alt="Centinela en uso: grabación del sitio en vivo" width="100%"></a>
+<a href="https://turnera-iota.vercel.app"><img src="assets/captura-turnera.webp" alt="Página principal de Turnera" width="100%"></a>
+<h3><a href="https://turnera-iota.vercel.app">Turnera</a></h3>
+<p>Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>Framer Motion</code> <code>Vite</code> <code>Tailwind CSS</code></p>
+<p><a href="https://turnera-iota.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Turnera">Código</a></p>
+</td>
+<td width="50%" valign="top">
+<a href="https://centinela-rho.vercel.app"><img src="assets/captura-centinela.webp" alt="Página principal de Centinela" width="100%"></a>
 <h3><a href="https://centinela-rho.vercel.app">Centinela</a></h3>
 <p>Dashboard de incidentes de ciberseguridad: qué está abierto, qué es crítico y qué mirar ahora, en una pantalla.</p>
 <p><code>React 19</code> <code>TypeScript</code> <code>Recharts</code> <code>Vite</code> <code>Tailwind CSS</code></p>
 <p><a href="https://centinela-rho.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Centinela">Código</a></p>
 </td>
+</tr>
+<tr>
 <td width="50%" valign="top">
-<a href="https://turnera-iota.vercel.app"><img src="assets/demo-turnera.webp" alt="Turnera en uso: grabación del sitio en vivo" width="100%"></a>
-<h3><a href="https://turnera-iota.vercel.app">Turnera</a></h3>
-<p>Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.</p>
-<p><code>React 19</code> <code>TypeScript</code> <code>Framer Motion</code> <code>Vite</code> <code>Tailwind CSS</code></p>
-<p><a href="https://turnera-iota.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Turnera">Código</a></p>
+<a href="https://atacama-puce.vercel.app"><img src="assets/captura-atacama-es.webp" alt="Página principal de Atacama" width="100%"></a>
+<h3><a href="https://atacama-puce.vercel.app">Atacama</a></h3>
+<p>Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>GSAP ScrollTrigger</code> <code>D3</code> <code>Tailwind CSS</code></p>
+<p><a href="https://atacama-puce.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Atacama">Código</a></p>
+</td>
+<td width="50%" valign="top">
+<a href="https://barometro-hazel.vercel.app"><img src="assets/captura-barometro.webp" alt="Página principal de Barómetro" width="100%"></a>
+<h3><a href="https://barometro-hazel.vercel.app">Barómetro</a></h3>
+<p>Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.</p>
+<p><code>Next.js 15</code> <code>TypeScript</code> <code>Recharts</code> <code>Tailwind CSS</code></p>
+<p><a href="https://barometro-hazel.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Barometro">Código</a></p>
 </td>
 </tr>
 </table>

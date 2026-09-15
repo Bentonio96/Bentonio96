@@ -38,13 +38,11 @@ export const perfil = {
 };
 
 /**
- * El orden de este arreglo es el orden en el perfil: el portafolio va primero.
+ * El orden de este arreglo es el orden en el perfil.
  *
- * La demo animada de cada uno sale de grabar.mjs, que tiene un guion por
- * `slug`. `urlDemo` (una URL, o una por idioma) e `idiomasDemo` son
- * opcionales: sin ellos se graba `demo` una sola vez para los dos idiomas.
- * Los enlaces del README siempre van a `demo`, salvo que `urlDemo` tenga
- * una URL por idioma.
+ * La captura de cada uno sale de capturar.mjs (la primera pantalla de
+ * `demo`). `urlCaptura` e `idiomasCaptura` son opcionales: sirven para
+ * capturar una URL distinta por idioma, como el portafolio en /en y /es.
  */
 export const proyectos = [
   {
@@ -56,26 +54,13 @@ export const proyectos = [
     },
     tecnologias: ["Next.js 15", "TypeScript", "GSAP", "Lenis", "Tailwind CSS"],
     demo: "https://benjamin-pena.vercel.app",
-    // Se graba en cada idioma para que la demo coincida con el README.
-    idiomasDemo: ["en", "es"],
-    urlDemo: {
+    // Se captura en cada idioma para que coincida con el README.
+    idiomasCaptura: ["en", "es"],
+    urlCaptura: {
       en: "https://benjamin-pena.vercel.app/en",
       es: "https://benjamin-pena.vercel.app/es",
     },
     repo: "Landing-Page",
-  },
-  {
-    slug: "atacama",
-    nombre: { en: "Atacama", es: "Atacama" },
-    // En la versión en inglés el guion cambia el sitio a inglés.
-    idiomasDemo: ["en", "es"],
-    descripcion: {
-      en: "A scroll-driven visual essay about the Atacama sky, in seven chapters, with a real reduced-motion version.",
-      es: "Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.",
-    },
-    tecnologias: ["React 19", "TypeScript", "GSAP ScrollTrigger", "D3", "Tailwind CSS"],
-    demo: "https://atacama-puce.vercel.app",
-    repo: "Atacama",
   },
   {
     slug: "epicentro",
@@ -86,21 +71,18 @@ export const proyectos = [
     },
     tecnologias: ["Next.js 15", "TypeScript", "MapLibre", "Recharts", "Tailwind CSS"],
     demo: "https://epicentro-sigma.vercel.app",
-    // La demo se graba en el mapa, donde está el listado sincronizado.
-    urlDemo: "https://epicentro-sigma.vercel.app/mapa",
     repo: "Epicentro",
   },
   {
-    slug: "barometro",
-    nombre: { en: "Barómetro", es: "Barómetro" },
+    slug: "turnera",
+    nombre: { en: "Turnera", es: "Turnera" },
     descripcion: {
-      en: "Chilean economic indicators that handle series published at different frequencies, plus a CLP/UF/USD converter.",
-      es: "Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.",
+      en: "Product site for a fictional scheduling app for small clinics, with a working booking demo. Lighthouse 99/100/100/100.",
+      es: "Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.",
     },
-    tecnologias: ["Next.js 15", "TypeScript", "Recharts", "Tailwind CSS"],
-    demo: "https://barometro-hazel.vercel.app",
-    urlDemo: "https://barometro-hazel.vercel.app/conversor",
-    repo: "Barometro",
+    tecnologias: ["React 19", "TypeScript", "Framer Motion", "Vite", "Tailwind CSS"],
+    demo: "https://turnera-iota.vercel.app",
+    repo: "Turnera",
   },
   {
     slug: "centinela",
@@ -114,15 +96,28 @@ export const proyectos = [
     repo: "Centinela",
   },
   {
-    slug: "turnera",
-    nombre: { en: "Turnera", es: "Turnera" },
+    slug: "atacama",
+    nombre: { en: "Atacama", es: "Atacama" },
+    // Para el README en inglés, capturar.mjs cambia el sitio a inglés.
+    idiomasCaptura: ["en", "es"],
     descripcion: {
-      en: "Product site for a fictional scheduling app for small clinics, with a working booking demo. Lighthouse 99/100/100/100.",
-      es: "Sitio de producto para una app ficticia de turnos para clínicas, con demo de reserva funcional. Lighthouse 99/100/100/100.",
+      en: "A scroll-driven visual essay about the Atacama sky, in seven chapters, with a real reduced-motion version.",
+      es: "Ensayo visual sobre el cielo de Atacama, contado con scroll en siete capítulos y con versión real para movimiento reducido.",
     },
-    tecnologias: ["React 19", "TypeScript", "Framer Motion", "Vite", "Tailwind CSS"],
-    demo: "https://turnera-iota.vercel.app",
-    repo: "Turnera",
+    tecnologias: ["React 19", "TypeScript", "GSAP ScrollTrigger", "D3", "Tailwind CSS"],
+    demo: "https://atacama-puce.vercel.app",
+    repo: "Atacama",
+  },
+  {
+    slug: "barometro",
+    nombre: { en: "Barómetro", es: "Barómetro" },
+    descripcion: {
+      en: "Chilean economic indicators that handle series published at different frequencies, plus a CLP/UF/USD converter.",
+      es: "Indicadores económicos de Chile que respetan la frecuencia de cada serie, con conversor CLP/UF/USD.",
+    },
+    tecnologias: ["Next.js 15", "TypeScript", "Recharts", "Tailwind CSS"],
+    demo: "https://barometro-hazel.vercel.app",
+    repo: "Barometro",
   },
 ];
 

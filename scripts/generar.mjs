@@ -3,8 +3,8 @@
  *
  *   npm run generar
  *
- * Las demos de los proyectos no salen de aquí: son WebP animados que graba
- * grabar.mjs (npm run grabar). Este script solo las enlaza.
+ * Las capturas de los proyectos no salen de aquí: las toma capturar.mjs
+ * (npm run capturar). Este script solo las enlaza.
  *
  * Por qué el encabezado es un SVG:
  *
@@ -144,8 +144,8 @@ ${lema}
 
 /* ============================================================
    README
-   Los proyectos van en una grilla de dos columnas: la demo arriba y el
-   texto corto debajo. El HTML de la tabla va sin líneas en blanco, o
+   Los proyectos van en una grilla de dos columnas: la captura arriba y
+   el texto corto debajo. El HTML de la tabla va sin líneas en blanco, o
    GitHub corta el bloque y lo mezcla con Markdown.
    ============================================================ */
 
@@ -156,7 +156,7 @@ const TEXTOS = {
     proyectos: "Projects",
     demo: "Live site",
     codigo: "Source code",
-    alt: (n) => `${n} in use: recording of the live site`,
+    alt: (n) => `Home page of ${n}`,
   },
   es: {
     otro: "[Read in English](README.md)",
@@ -164,23 +164,23 @@ const TEXTOS = {
     proyectos: "Proyectos",
     demo: "Ver sitio",
     codigo: "Código",
-    alt: (n) => `${n} en uso: grabación del sitio en vivo`,
+    alt: (n) => `Página principal de ${n}`,
   },
 };
 
-function demoDe(p, idioma) {
-  const nombre = p.idiomasDemo ? `${p.slug}-${idioma}` : p.slug;
-  const ruta = `assets/demo-${nombre}.webp`;
+function capturaDe(p, idioma) {
+  const nombre = p.idiomasCaptura ? `${p.slug}-${idioma}` : p.slug;
+  const ruta = `assets/captura-${nombre}.webp`;
   return existsSync(join(RAIZ, ruta)) ? ruta : null;
 }
 
 function celda(p, idioma) {
   const t = TEXTOS[idioma];
-  const sitio = (typeof p.urlDemo === "object" && p.urlDemo[idioma]) || p.demo;
-  const demo = demoDe(p, idioma);
+  const sitio = p.urlCaptura?.[idioma] ?? p.demo;
+  const captura = capturaDe(p, idioma);
   return [
     `<td width="50%" valign="top">`,
-    demo ? `<a href="${sitio}"><img src="${demo}" alt="${t.alt(p.nombre[idioma])}" width="100%"></a>` : "",
+    captura ? `<a href="${sitio}"><img src="${captura}" alt="${t.alt(p.nombre[idioma])}" width="100%"></a>` : "",
     `<h3><a href="${sitio}">${p.nombre[idioma]}</a></h3>`,
     `<p>${p.descripcion[idioma]}</p>`,
     `<p>${p.tecnologias.map((x) => `<code>${x}</code>`).join(" ")}</p>`,
@@ -193,7 +193,7 @@ function celda(p, idioma) {
 
 function readme(idioma) {
   const t = TEXTOS[idioma];
-  const sitio = proyectos.find((p) => p.slug === "portafolio")?.urlDemo?.[idioma] ?? perfil.sitio;
+  const sitio = proyectos.find((p) => p.slug === "portafolio")?.urlCaptura?.[idioma] ?? perfil.sitio;
 
   const filas = [];
   for (let i = 0; i < proyectos.length; i += 2) {
@@ -249,6 +249,6 @@ for (const idioma of ["en", "es"]) {
 escribir("README.md", readme("en"));
 escribir("README.es.md", readme("es"));
 
-const sinDemo = proyectos.flatMap((p) => ["en", "es"].filter((i) => !demoDe(p, i)).map((i) => `${p.slug} (${i})`));
+const sinCaptura = proyectos.flatMap((p) => ["en", "es"].filter((i) => !capturaDe(p, i)).map((i) => `${p.slug} (${i})`));
 console.log(`Listo: ${escritos.length} archivos.`);
-if (sinDemo.length) console.log(`Sin demo grabada: ${sinDemo.join(", ")}. Corre npm run grabar.`);
+if (sinCaptura.length) console.log(`Sin captura: ${sinCaptura.join(", ")}. Corre npm run capturar.`);
