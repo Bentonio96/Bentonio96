@@ -46,7 +46,7 @@ I'm open to full-time and freelance roles.
 <a href="https://centinela-rho.vercel.app"><img src="assets/captura-centinela.webp" alt="Home page of Centinela" width="100%"></a>
 <h3><a href="https://centinela-rho.vercel.app">Centinela</a></h3>
 <p>Security incident dashboard: what is open, what is critical and what to look at next, on one screen.</p>
-<p><code>React 19</code> <code>TypeScript</code> <code>Recharts</code> <code>Vite</code> <code>Tailwind CSS</code></p>
+<p><code>React 19</code> <code>TypeScript</code> <code>Vite</code> <code>Tailwind CSS</code></p>
 <p><a href="https://centinela-rho.vercel.app">Live site</a> &nbsp; <a href="https://github.com/Bentonio96/Centinela">Source code</a></p>
 </td>
 </tr>

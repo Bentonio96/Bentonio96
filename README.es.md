@@ -46,7 +46,7 @@ Estoy disponible para trabajo full-time y freelance.
 <a href="https://centinela-rho.vercel.app"><img src="assets/captura-centinela.webp" alt="Página principal de Centinela" width="100%"></a>
 <h3><a href="https://centinela-rho.vercel.app">Centinela</a></h3>
 <p>Dashboard de incidentes de ciberseguridad: qué está abierto, qué es crítico y qué mirar ahora, en una pantalla.</p>
-<p><code>React 19</code> <code>TypeScript</code> <code>Recharts</code> <code>Vite</code> <code>Tailwind CSS</code></p>
+<p><code>React 19</code> <code>TypeScript</code> <code>Vite</code> <code>Tailwind CSS</code></p>
 <p><a href="https://centinela-rho.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Centinela">Código</a></p>
 </td>
 </tr>

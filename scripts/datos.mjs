@@ -91,7 +91,7 @@ export const proyectos = [
       en: "Security incident dashboard: what is open, what is critical and what to look at next, on one screen.",
       es: "Dashboard de incidentes de ciberseguridad: qué está abierto, qué es crítico y qué mirar ahora, en una pantalla.",
     },
-    tecnologias: ["React 19", "TypeScript", "Recharts", "Vite", "Tailwind CSS"],
+    tecnologias: ["React 19", "TypeScript", "Vite", "Tailwind CSS"],
     demo: "https://centinela-rho.vercel.app",
     repo: "Centinela",
   },
