@@ -27,6 +27,22 @@ I'm open to full-time and freelance roles.
 <p><a href="https://benjamin-pena.vercel.app/en">Live site</a> &nbsp; <a href="https://github.com/Bentonio96/Landing-Page">Source code</a></p>
 </td>
 <td width="50%" valign="top">
+<a href="https://kerr-mission.vercel.app"><img src="assets/captura-kerr-en.webp" alt="Home page of Kerr" width="100%"></a>
+<h3><a href="https://kerr-mission.vercel.app">Kerr</a></h3>
+<p>A fictional crewed mission to a spinning black hole: WebGL2 gravitational lensing, a scroll that crosses the event horizon and a HUD with real physics.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>WebGL2</code> <code>GSAP</code> <code>Web Audio</code></p>
+<p><a href="https://kerr-mission.vercel.app">Live site</a> &nbsp; <a href="https://github.com/Bentonio96/Kerr-Mission">Source code</a></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="https://kinetica-fest.vercel.app"><img src="assets/captura-kinetica-en.webp" alt="Home page of Kinetica" width="100%"></a>
+<h3><a href="https://kinetica-fest.vercel.app">Kinetica</a></h3>
+<p>Landing page for a fictional festival of light, sound and motion, with an iridescent WebGL2 orb, particle shapes and kinetic type.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>WebGL2</code> <code>GSAP</code> <code>Tailwind CSS</code></p>
+<p><a href="https://kinetica-fest.vercel.app">Live site</a> &nbsp; <a href="https://github.com/Bentonio96/Kinetica">Source code</a></p>
+</td>
+<td width="50%" valign="top">
 <a href="https://epicentro-sigma.vercel.app"><img src="assets/captura-epicentro.webp" alt="Home page of Epicentro" width="100%"></a>
 <h3><a href="https://epicentro-sigma.vercel.app">Epicentro</a></h3>
 <p>Real-time earthquakes in Chile from USGS data, with a map synced to a fully keyboard-accessible listing.</p>

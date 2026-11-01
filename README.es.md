@@ -27,6 +27,22 @@ Estoy disponible para trabajo full-time y freelance.
 <p><a href="https://benjamin-pena.vercel.app/es">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Landing-Page">Código</a></p>
 </td>
 <td width="50%" valign="top">
+<a href="https://kerr-mission.vercel.app"><img src="assets/captura-kerr-es.webp" alt="Página principal de Kerr" width="100%"></a>
+<h3><a href="https://kerr-mission.vercel.app">Kerr</a></h3>
+<p>Misión ficticia hacia un agujero negro en rotación: lente gravitacional en WebGL2, un scroll que cruza el horizonte de eventos y un HUD con física real.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>WebGL2</code> <code>GSAP</code> <code>Web Audio</code></p>
+<p><a href="https://kerr-mission.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Kerr-Mission">Código</a></p>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="https://kinetica-fest.vercel.app"><img src="assets/captura-kinetica-es.webp" alt="Página principal de Kinetica" width="100%"></a>
+<h3><a href="https://kinetica-fest.vercel.app">Kinetica</a></h3>
+<p>Landing de un festival ficticio de luz, sonido y movimiento, con un orbe iridiscente en WebGL2, partículas que forman figuras y tipografía cinética.</p>
+<p><code>React 19</code> <code>TypeScript</code> <code>WebGL2</code> <code>GSAP</code> <code>Tailwind CSS</code></p>
+<p><a href="https://kinetica-fest.vercel.app">Ver sitio</a> &nbsp; <a href="https://github.com/Bentonio96/Kinetica">Código</a></p>
+</td>
+<td width="50%" valign="top">
 <a href="https://epicentro-sigma.vercel.app"><img src="assets/captura-epicentro.webp" alt="Página principal de Epicentro" width="100%"></a>
 <h3><a href="https://epicentro-sigma.vercel.app">Epicentro</a></h3>
 <p>Sismos de Chile en tiempo real con datos del USGS, con un mapa sincronizado a un listado accesible con teclado.</p>

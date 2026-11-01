@@ -41,7 +41,22 @@ const PREPARAR = {
     await p.locator("button", { hasText: /^\s*EN/ }).filter({ visible: true }).first().click();
     await p.waitForTimeout(1200);
   },
+  // Kerr y Kinetica eligen idioma por el guardado o por el del navegador.
+  async kerr(p, idioma) {
+    await idiomaGuardado(p, "kerr:lang", idioma);
+    // Cierra el aviso de sonido, que tapa la esquina del encabezado.
+    await p.locator("button", { hasText: /Cerrar aviso|Close notice/ }).first().click({ timeout: 5000 }).catch(() => {});
+    await p.waitForTimeout(600);
+  },
+  async kinetica(p, idioma) {
+    await idiomaGuardado(p, "kinetica:lang", idioma);
+  },
 };
+
+async function idiomaGuardado(p, llave, idioma) {
+  await p.evaluate(([k, v]) => localStorage.setItem(k, v), [llave, idioma]);
+  await p.reload({ waitUntil: "networkidle" });
+}
 
 /* ============================================================
    BARRA DE NAVEGADOR

@@ -63,6 +63,30 @@ export const proyectos = [
     repo: "Landing-Page",
   },
   {
+    slug: "kerr",
+    nombre: { en: "Kerr", es: "Kerr" },
+    idiomasCaptura: ["en", "es"],
+    descripcion: {
+      en: "A fictional crewed mission to a spinning black hole: WebGL2 gravitational lensing, a scroll that crosses the event horizon and a HUD with real physics.",
+      es: "Misión ficticia hacia un agujero negro en rotación: lente gravitacional en WebGL2, un scroll que cruza el horizonte de eventos y un HUD con física real.",
+    },
+    tecnologias: ["React 19", "TypeScript", "WebGL2", "GSAP", "Web Audio"],
+    demo: "https://kerr-mission.vercel.app",
+    repo: "Kerr-Mission",
+  },
+  {
+    slug: "kinetica",
+    nombre: { en: "Kinetica", es: "Kinetica" },
+    idiomasCaptura: ["en", "es"],
+    descripcion: {
+      en: "Landing page for a fictional festival of light, sound and motion, with an iridescent WebGL2 orb, particle shapes and kinetic type.",
+      es: "Landing de un festival ficticio de luz, sonido y movimiento, con un orbe iridiscente en WebGL2, partículas que forman figuras y tipografía cinética.",
+    },
+    tecnologias: ["React 19", "TypeScript", "WebGL2", "GSAP", "Tailwind CSS"],
+    demo: "https://kinetica-fest.vercel.app",
+    repo: "Kinetica",
+  },
+  {
     slug: "epicentro",
     nombre: { en: "Epicentro", es: "Epicentro" },
     descripcion: {
